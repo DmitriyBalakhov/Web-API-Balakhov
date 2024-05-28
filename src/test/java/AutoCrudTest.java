@@ -1,10 +1,12 @@
 import io.restassured.RestAssured;
 import io.restassured.http.Cookie;
 import io.restassured.response.Response;
+import net.bytebuddy.build.Plugin;
 import org.example.entityfactory.UserFactory;
 import org.junit.jupiter.api.*;
 import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_OK;
+import org.junit.jupiter.api.Test;
 
 
 public class AutoCrudTest {
@@ -15,7 +17,7 @@ public class AutoCrudTest {
 
 
     @Test
-    public void createNewUser() {
+    public void CreateNewUser() {
         Response response = given()
                 .header("Content-Type", "application/json")
                 .body(UserFactory.createUser())
@@ -32,10 +34,6 @@ public class AutoCrudTest {
 
         Cookie sessionCookie = response.getDetailedCookie("sid");
 
-    }
-
-    @Test
-    public void login() {
         given()
                 .header("Content-Type", "application/json")
                 .body(UserFactory.loginUser())
@@ -44,32 +42,72 @@ public class AutoCrudTest {
                 .then()
                 .log()
                 .all()
-                .statusCode(201);
-//                .extract()
-//                .response();
+                .statusCode(SC_OK);
+
+
+        given()
+                .when()
+                .get("/users/profile")
+                .then()
+                .log()
+                .all()
+                .statusCode(SC_OK);
+
+
+        given()
+                .header("Content-Type", "application/json")
+                .body(UserFactory.updateUserProfile())
+                .when()
+                .post("/users/profile")
+                .then()
+                .log()
+                .all()
+                .statusCode(SC_OK);
+
 
     }
 
-    @Test
-    public void updateProfileInfo() {
-            given()
-            .header("Content-Type", "application/json")
-            .body(UserFactory.updateUserProfile())
-            .when()
-            .post("/users/profile")
-            .then()
-            .log()
-            .all()
-            .statusCode(201);
 
-             given()
-                     .when()
-                     .get("/users/profile")
-                     .then()
-                     .log()
-                     .all()
-                     .statusCode(SC_OK);
 
-        }
+//    @Test
+//    public void Login() {
+//        given()
+//                .header("Content-Type", "application/json")
+//                .body(UserFactory.loginUser())
+//                .when()
+//                .post("/auth/signin")
+//                .then()
+//                .log()
+//                .all()
+//                .statusCode(SC_OK);
+//    }
+
+
+//    @Test
+//    public void GetProfileData() {
+//
+//        given()
+//                .when()
+//                .get("/users/profile")
+//                .then()
+//                .log()
+//                .all()
+//                .statusCode(SC_OK);
+//    }
+
+
+//    @Test
+//    public void UpdateProfileInfo() {
+//        given()
+//                .header("Content-Type", "application/json")
+//                .body(UserFactory.updateUserProfile())
+//                .when()
+//                .post("/users/profile")
+//                .then()
+//                .log()
+//                .all()
+//                .statusCode(SC_OK);
+//
+//        }
 
     }

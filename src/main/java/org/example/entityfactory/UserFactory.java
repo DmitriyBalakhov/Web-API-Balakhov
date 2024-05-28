@@ -18,9 +18,9 @@ return new User(
 
     public static UserLoginData loginUser() {
         return new UserLoginData(
-            "test@test.com",
-            "Qwerty12345",
-            "false");
+                UserEntity.EMAIL.getFieldName(),
+                "UserPassword1!",
+                "false");
     }
 
     public static UsersProfileData updateUserProfile() {
