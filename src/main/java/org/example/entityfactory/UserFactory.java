@@ -25,7 +25,6 @@ return new User(
 
     public static UsersProfileData updateUserProfile() {
         return new UsersProfileData(
-                "Jack's photo.jpg",
                 "Jack",
                 "Black",
                 "1990-01-01T01:01:01.000Z",

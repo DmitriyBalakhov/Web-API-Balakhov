@@ -1,7 +1,6 @@
 import io.restassured.RestAssured;
 import io.restassured.http.Cookie;
 import io.restassured.response.Response;
-import net.bytebuddy.build.Plugin;
 import org.example.entityfactory.UserFactory;
 import org.junit.jupiter.api.*;
 import static io.restassured.RestAssured.given;
@@ -34,11 +33,13 @@ public class AutoCrudTest {
 
         Cookie sessionCookie = response.getDetailedCookie("sid");
 
+
         given()
                 .header("Content-Type", "application/json")
-                .body(UserFactory.loginUser())
+                .body(UserFactory.updateUserProfile())
+                .cookie(sessionCookie)
                 .when()
-                .post("/auth/signin")
+                .put("/users/profile")
                 .then()
                 .log()
                 .all()
@@ -46,6 +47,7 @@ public class AutoCrudTest {
 
 
         given()
+                .cookie(sessionCookie)
                 .when()
                 .get("/users/profile")
                 .then()
@@ -53,61 +55,10 @@ public class AutoCrudTest {
                 .all()
                 .statusCode(SC_OK);
 
-
-        given()
-                .header("Content-Type", "application/json")
-                .body(UserFactory.updateUserProfile())
-                .when()
-                .post("/users/profile")
-                .then()
-                .log()
-                .all()
-                .statusCode(SC_OK);
-
-
     }
 
 
 
-//    @Test
-//    public void Login() {
-//        given()
-//                .header("Content-Type", "application/json")
-//                .body(UserFactory.loginUser())
-//                .when()
-//                .post("/auth/signin")
-//                .then()
-//                .log()
-//                .all()
-//                .statusCode(SC_OK);
-//    }
 
-
-//    @Test
-//    public void GetProfileData() {
-//
-//        given()
-//                .when()
-//                .get("/users/profile")
-//                .then()
-//                .log()
-//                .all()
-//                .statusCode(SC_OK);
-//    }
-
-
-//    @Test
-//    public void UpdateProfileInfo() {
-//        given()
-//                .header("Content-Type", "application/json")
-//                .body(UserFactory.updateUserProfile())
-//                .when()
-//                .post("/users/profile")
-//                .then()
-//                .log()
-//                .all()
-//                .statusCode(SC_OK);
-//
-//        }
 
     }
